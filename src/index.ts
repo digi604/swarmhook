@@ -8,8 +8,20 @@ import eventRoutes from './routes/events'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 import { securityLogger, rateLimit } from './middleware/security'
+import { logger as axiomLogger } from './lib/logger'
 
 const app = new Hono()
+
+// Log Axiom status on startup
+if (process.env.AXIOM_TOKEN && process.env.AXIOM_DATASET) {
+  console.log(`✅ Axiom logging enabled: dataset=${process.env.AXIOM_DATASET}`)
+  axiomLogger.info('swarmhook_started', {
+    version: '1.0.0',
+    dataset: process.env.AXIOM_DATASET
+  })
+} else {
+  console.log('⚠️  Axiom logging disabled (AXIOM_TOKEN or AXIOM_DATASET not set)')
+}
 
 // Middleware
 app.use('*', logger())
