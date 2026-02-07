@@ -8,7 +8,7 @@ help: ## Show this help message
 install: ## Install dependencies
 	bun install
 
-backend: ## Start backend server (uses local Redis)
+backend: install ## Start backend server (auto-installs dependencies)
 	@echo "Starting SwarmHook backend..."
 	@echo "Using local Redis on localhost:6379"
 	@export REDIS_URL=redis://localhost:6379 && \
