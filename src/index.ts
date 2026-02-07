@@ -30,7 +30,8 @@ app.get('/health', (c) => {
 // Landing page
 app.get('/', (c) => {
   console.log('GET / handler called')
-  const landingPage = `  ____                           _   _             _
+  try {
+    const landingPage = `  ____                           _   _             _
  / ___|_      ____ _ _ __ _ __ | | | | ___   ___ | | __
  \\___ \\ \\ /\\ / / _\` | '__| '_ \\| |_| |/ _ \\ / _ \\| |/ /
   ___) \\ V  V / (_| | |  | | | |  _  | (_) | (_) |   <
@@ -130,11 +131,15 @@ app.get('/', (c) => {
 
   Built with ❤️  for the autonomous agent economy`
 
-  console.log('Landing page length:', landingPage.length)
-  c.header('Content-Type', 'text/plain; charset=utf-8')
-  const response = c.text(landingPage)
-  console.log('Response:', response)
-  return response
+    console.log('Landing page length:', landingPage.length)
+    c.header('Content-Type', 'text/plain; charset=utf-8')
+    const response = c.text(landingPage)
+    console.log('Response:', response)
+    return response
+  } catch (error) {
+    console.error('Error in GET / handler:', error)
+    return c.text('Error loading landing page: ' + error.message, 500)
+  }
 })
 
 // Skill files
