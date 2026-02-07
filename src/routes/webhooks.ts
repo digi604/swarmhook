@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
 import { InboxService } from '../services/inbox'
 import { logSecurity } from '../middleware/security'
+import { logger } from '../lib/logger'
 
 const app = new Hono()
 
@@ -72,15 +73,12 @@ app.post('/:inbox_id', async (c) => {
     const event = await InboxService.storeEvent(inboxId, sourceIp, headers, body)
 
     // Log successful webhook receipt
-    console.log(JSON.stringify({
-      timestamp: new Date().toISOString(),
-      level: 'info',
-      action: 'webhook_received',
+    logger.info('webhook_received', {
       inbox_id: inboxId,
       event_id: event.id,
       ip: sourceIp,
       content_type: contentType
-    }))
+    })
 
     return c.json({
       success: true,

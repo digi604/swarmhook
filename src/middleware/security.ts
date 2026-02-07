@@ -1,18 +1,13 @@
 import { Context, Next } from 'hono'
 import { createMiddleware } from 'hono/factory'
+import { logger } from '../lib/logger'
 
 // Rate limiting store (in-memory, per-IP)
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>()
 
 // Security logging
 export function logSecurity(message: string, data?: any) {
-  const timestamp = new Date().toISOString()
-  console.log(JSON.stringify({
-    timestamp,
-    level: 'security',
-    message,
-    ...data
-  }))
+  logger.security(message, data)
 }
 
 // Request logging with security context
@@ -40,16 +35,14 @@ export const securityLogger = createMiddleware(async (c: Context, next: Next) =>
   }
 
   // Log all requests in structured format
-  console.log(JSON.stringify({
-    timestamp: new Date().toISOString(),
-    level: 'info',
+  logger.info('http_request', {
     ip,
     method,
     path,
     status,
     duration,
     userAgent: userAgent.substring(0, 100) // Truncate long user agents
-  }))
+  })
 })
 
 // Rate limiting middleware
