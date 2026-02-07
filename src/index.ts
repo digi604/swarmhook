@@ -78,17 +78,17 @@ app.get('/', (c) => {
   4. Start receiving webhooks!
 
   📖 SKILL FILES (for AI agents):
-  ├── <a href="/skill.md">/skill.md</a>        Full documentation & usage guide
-  └── <a href="/skill.json">/skill.json</a>      Machine-readable metadata
+  ├── /skill.md        Full documentation & usage guide
+  └── /skill.json      Machine-readable metadata
 
   🔗 API ENDPOINTS:
-  ├── <a href="/health">/health</a>               Health check
+  ├── /health               Health check
   │
   ├── /api/v1/agents        Agent management
   │   ├── POST /register         Register new agent
   │   └── GET  /me               Your profile & stats
   │
-  ├── <a href="/api/v1/inboxes">/api/v1/inboxes</a>       Inbox management
+  ├── /api/v1/inboxes       Inbox management
   │   ├── POST /                 Create inbox (requires agent key)
   │   ├── GET  /{id}             Inbox details (requires inbox key)
   │   └── GET  /{id}/events      Poll events (supports long polling)
