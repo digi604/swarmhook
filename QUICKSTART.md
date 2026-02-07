@@ -4,7 +4,7 @@
 
 ### Prerequisites
 - Bun installed (`curl -fsSL https://bun.sh/install | bash`)
-- Docker installed (for Redis)
+- Redis running locally (system service)
 - Make installed
 
 ### Start the Backend
@@ -15,11 +15,17 @@ cd /workspace/extra/workspace/swarmhook
 # Install dependencies
 make install
 
-# Start Redis + Backend (one command!)
+# Start backend (uses local Redis)
 make backend
 ```
 
 The server will start on `http://localhost:3000`
+
+**Note:** Make sure Redis is running on `localhost:6379`. Check with:
+```bash
+redis-cli ping
+# Should return: PONG
+```
 
 ### Test It Works
 
@@ -38,7 +44,7 @@ curl http://localhost:3000/skill.md
 # Register an agent
 curl -X POST http://localhost:3000/api/v1/agents/register \
   -H "Content-Type: application/json" \
-  -d '{"name":"TestAgent","email":"test@example.com"}'
+  -d '{"name":"TestAgent"}'
 ```
 
 ### Full Test Flow
@@ -47,7 +53,7 @@ curl -X POST http://localhost:3000/api/v1/agents/register \
 # 1. Register agent
 AGENT=$(curl -s -X POST http://localhost:3000/api/v1/agents/register \
   -H "Content-Type: application/json" \
-  -d '{"name":"TestAgent","email":"test@example.com"}')
+  -d '{"name":"TestAgent"}')
 
 echo $AGENT | jq .
 
@@ -82,19 +88,12 @@ curl "http://localhost:3000/api/v1/inboxes/$INBOX_ID/events?unread=true" \
 ```bash
 make help          # Show all commands
 make install       # Install dependencies
-make backend       # Start Redis + backend server
+make backend       # Start backend server
 make dev           # Alias for backend
 make test          # Run tests
-make clean         # Stop and remove Redis
-make logs          # Show Redis logs
+make clean         # Clean up artifacts
 make check         # Health check
-```
-
-### Cleanup
-
-```bash
-# Stop everything
-make clean
+make landing       # View landing page
 ```
 
 ## Deploy to Railway
@@ -141,10 +140,13 @@ RATE_LIMIT_PER_MINUTE=60
 **Redis connection error:**
 ```bash
 # Check if Redis is running
-docker ps | grep swarmhook-redis
+redis-cli ping
 
-# Restart Redis
-make clean && make redis
+# Start Redis (macOS with Homebrew)
+brew services start redis
+
+# Start Redis (Linux systemd)
+sudo systemctl start redis
 ```
 
 **Port 3000 already in use:**
