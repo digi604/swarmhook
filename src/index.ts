@@ -50,6 +50,140 @@ app.get('/health', (c) => {
 
 // Landing page
 app.get('/', (c) => {
+  const accept = c.req.header('accept') || ''
+
+  // Serve HTML for browsers, plain text for API clients
+  if (accept.includes('text/html')) {
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwarmHook - Webhook Infrastructure for AI Agents</title>
+    <style>
+        body { font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace; background: #0d1117; color: #c9d1d9; margin: 0; padding: 20px; }
+        pre { margin: 0; white-space: pre; line-height: 1.4; }
+        a { color: #58a6ff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+<pre>
+  ____                           _   _             _
+ / ___|_      ____ _ _ __ _ __ | | | | ___   ___ | | __
+ \\___ \\ \\ /\\ / / _\` | '__| '_ \\| |_| |/ _ \\ / _ \\| |/ /
+  ___) \\ V  V / (_| | |  | | | |  _  | (_) | (_) |   <
+ |____/ \\_/\\_/ \\__,_|_|  |_| |_|_| |_|\\___/ \\___/|_|\\_\\
+
+        Zero-cost webhook infrastructure for AI agents
+
+  ╔═══════════════════════════════════════════════════════════════╗
+  ║     Ephemeral Webhook Inboxes for Autonomous Agents          ║
+  ║     No servers. No costs. Just webhooks that work.           ║
+  ╚═══════════════════════════════════════════════════════════════╝
+
+  🚀 GET STARTED:
+  ────────────────
+  1. Register as an agent:
+     POST /api/v1/agents/register
+     {"name": "MyAgent"}
+
+  2. Save your API key (swh_...)
+
+  3. Create webhook inbox:
+     POST /api/v1/inboxes
+     X-API-Key: swh_your_key
+
+  4. Start receiving webhooks!
+
+  📖 SKILL FILES (for AI agents):
+  ├── <a href="/skill.md">/skill.md</a>        Full documentation & usage guide
+  └── <a href="/skill.json">/skill.json</a>      Machine-readable metadata
+
+  🔗 API ENDPOINTS:
+  ├── <a href="/health">/health</a>               Health check
+  │
+  ├── /api/v1/agents        Agent management
+  │   ├── POST /register         Register new agent
+  │   └── GET  /me               Your profile & stats
+  │
+  ├── <a href="/api/v1/inboxes">/api/v1/inboxes</a>       Inbox management
+  │   ├── POST /                 Create inbox (requires agent key)
+  │   ├── GET  /{id}             Inbox details (requires inbox key)
+  │   └── GET  /{id}/events      Poll events (supports long polling)
+  │       ?wait=60               Long poll (wait up to 60s)
+  │       ?unread=true           Only unread events
+  │       ?mark_read=true        Mark as read
+  │       ?since=ISO8601         Events since timestamp
+  │       ?limit=50              Max events to return
+  │
+  ├── /api/v1/inboxes       Event streaming
+  │   └── GET  /{id}/stream      Server-Sent Events stream
+  │
+  └── /in/{inbox_id}        Webhook receiver (public)
+      ├── POST /                 Receive webhook from any source
+      └── GET  /                 Check inbox status
+
+  💡 HOW IT WORKS:
+  ────────────────
+  1. You create an ephemeral inbox (24-48hr lifetime)
+  2. You get a public webhook URL: https://swarmhook.com/in/inbox_abc123
+  3. Register that URL with external services (SwarmMarket, Stripe, etc.)
+  4. Poll for events or use SSE streaming
+  5. Inbox auto-deletes when expired
+
+  🎯 USE CASES:
+  ────────────────
+  ✓ AI agents receiving marketplace notifications
+  ✓ Bots monitoring payment events (Stripe, PayPal)
+  ✓ Autonomous systems tracking GitHub webhooks
+  ✓ Agents listening to blockchain events
+
+  🔒 SECURITY:
+  ────────────────
+  ✓ API keys required for agent & inbox management
+  ✓ Webhook URLs are unguessable (cryptographic random IDs)
+  ✓ Rate limiting on all endpoints
+  ✓ Request validation & sanitization
+  ✓ No PII stored (just webhook payloads)
+  ✓ Auto-expiring inboxes (ephemeral by design)
+
+  💰 PRICING:
+  ────────────────
+  Free Tier:
+  • 5 concurrent inboxes
+  • 100 events per inbox
+  • 48 hour max TTL
+  • 60 requests/minute
+
+  Premium (Coming Soon):
+  • Unlimited inboxes
+  • 10,000 events per inbox
+  • 7 day TTL
+  • Priority support
+
+  📚 DOCUMENTATION:
+  ────────────────
+  • Quick Start:   <a href="https://github.com/digi604/swarmhook#readme">https://github.com/digi604/swarmhook#readme</a>
+  • Security:      <a href="https://github.com/digi604/swarmhook/blob/main/SECURITY.md">https://github.com/digi604/swarmhook/blob/main/SECURITY.md</a>
+  • Deploy Guide:  <a href="https://github.com/digi604/swarmhook/blob/main/DEPLOYMENT.md">https://github.com/digi604/swarmhook/blob/main/DEPLOYMENT.md</a>
+
+  🛠️ TECH STACK:
+  ────────────────
+  • Runtime: Bun (3x faster than Node.js)
+  • Framework: Hono (fastest TS framework)
+  • Database: Redis (ephemeral TTL-based storage)
+  • Hosting: Railway.app (free tier available)
+
+  Built with ❤️  for the autonomous agent economy
+
+</pre>
+</body>
+</html>`
+    return c.html(html)
+  }
+
+  // Plain text version for API clients (curl, etc.)
   const landingPage = `  ____                           _   _             _
  / ___|_      ____ _ _ __ _ __ | | | | ___   ___ | | __
  \\___ \\ \\ /\\ / / _\` | '__| '_ \\| |_| |/ _ \\ / _ \\| |/ /
@@ -128,7 +262,6 @@ app.get('/', (c) => {
   ✓ Request validation & sanitization
   ✓ No PII stored (just webhook payloads)
   ✓ Auto-expiring inboxes (ephemeral by design)
-  ✓ Any scenario where you need webhooks without a server
 
   💰 PRICING:
   ────────────────
