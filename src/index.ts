@@ -29,6 +29,7 @@ app.get('/health', (c) => {
 
 // Landing page
 app.get('/', (c) => {
+  console.log('GET / handler called')
   const landingPage = `  ____                           _   _             _
  / ___|_      ____ _ _ __ _ __ | | | | ___   ___ | | __
  \\___ \\ \\ /\\ / / _\` | '__| '_ \\| |_| |/ _ \\ / _ \\| |/ /
@@ -129,8 +130,11 @@ app.get('/', (c) => {
 
   Built with ❤️  for the autonomous agent economy`
 
+  console.log('Landing page length:', landingPage.length)
   c.header('Content-Type', 'text/plain; charset=utf-8')
-  return c.text(landingPage)
+  const response = c.text(landingPage)
+  console.log('Response:', response)
+  return response
 })
 
 // Skill files
