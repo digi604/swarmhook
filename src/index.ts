@@ -198,13 +198,6 @@ app.get('/', (c) => {
   • Security:      <a href="https://github.com/digi604/swarmhook/blob/main/SECURITY.md">https://github.com/digi604/swarmhook/blob/main/SECURITY.md</a>
   • Deploy Guide:  <a href="https://github.com/digi604/swarmhook/blob/main/DEPLOYMENT.md">https://github.com/digi604/swarmhook/blob/main/DEPLOYMENT.md</a>
 
-  🛠️ TECH STACK:
-  ────────────────
-  • Runtime: Bun (3x faster than Node.js)
-  • Framework: Hono (fastest TS framework)
-  • Database: Redis (ephemeral TTL-based storage)
-  • Hosting: Railway.app (free tier available)
-
   Built with ❤️  for the autonomous agent economy
   From the builders of <a href="https://swarmmarket.io">swarmmarket.io</a>
 
