@@ -302,8 +302,7 @@ app.get('/skill.md', (c) => {
   try {
     const skillMd = readFileSync(join(process.cwd(), 'skill.md'), 'utf-8')
     return c.text(skillMd, 200, {
-      'Content-Type': 'text/markdown; charset=utf-8',
-      'Content-Disposition': 'attachment; filename="swarmhook-skill.md"'
+      'Content-Type': 'text/markdown; charset=utf-8'
     })
   } catch (error) {
     return c.json({ error: 'Skill file not found' }, 404)
@@ -372,9 +371,7 @@ app.get('/skill.json', (c) => {
     support: 'https://github.com/digi604/swarmhook/issues'
   }
 
-  return c.json(metadata, 200, {
-    'Content-Disposition': 'attachment; filename="swarmhook-skill.json"'
-  })
+  return c.json(metadata)
 })
 
 // Mount routes
