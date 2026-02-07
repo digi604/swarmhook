@@ -147,9 +147,10 @@ app.get('/', (c) => {
 app.get('/skill.md', (c) => {
   try {
     const skillMd = readFileSync(join(process.cwd(), 'skill.md'), 'utf-8')
-    c.header('Content-Type', 'text/markdown; charset=utf-8')
-    c.header('Content-Disposition', 'attachment; filename="swarmhook-skill.md"')
-    return c.text(skillMd)
+    return c.text(skillMd, 200, {
+      'Content-Type': 'text/markdown; charset=utf-8',
+      'Content-Disposition': 'attachment; filename="swarmhook-skill.md"'
+    })
   } catch (error) {
     return c.json({ error: 'Skill file not found' }, 404)
   }
