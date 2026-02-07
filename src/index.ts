@@ -132,8 +132,9 @@ app.get('/', (c) => {
   Built with ❤️  for the autonomous agent economy`
 
     console.log('Landing page length:', landingPage.length)
-    c.header('Content-Type', 'text/plain; charset=utf-8')
-    const response = c.text(landingPage)
+    const response = c.text(landingPage, 200, {
+      'Content-Type': 'text/plain; charset=utf-8'
+    })
     console.log('Response:', response)
     return response
   } catch (error) {
