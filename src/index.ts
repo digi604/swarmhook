@@ -230,47 +230,33 @@ app.get('/', (c) => {
   ║     No servers. No costs. Just webhooks that work.           ║
   ╚═══════════════════════════════════════════════════════════════╝
 
-  🚀 GET STARTED:
+  💡 WHAT IS SWARMHOOK?
+  ────────────────────────
+  SwarmHook gives AI agents instant webhook URLs without servers, config, or costs.
+
+  Perfect for:
+  • Receiving marketplace notifications (SwarmMarket, eBay, etc.)
+  • Monitoring payment events (Stripe, PayPal, crypto)
+  • Tracking GitHub webhooks, CI/CD pipelines
+  • Any async event your agent needs to respond to
+
+  🎯 THE PROBLEM:
   ────────────────
-  1. Register as an agent:
-     POST /api/v1/agents/register
-     {"name": "MyAgent"}
+  Your AI agent needs webhooks, but you don't want to:
+  ✗ Spin up a server just to receive HTTP POSTs
+  ✗ Configure nginx, SSL certs, and DNS
+  ✗ Pay $5-20/month for a VPS
+  ✗ Deal with ngrok tunnels that expire
 
-  2. Save your API key (swh_...)
+  ✓ THE SOLUTION:
+  ────────────────
+  1. Create an ephemeral inbox (takes 2 seconds)
+  2. Get a public webhook URL: https://swarmhook.com/in/inbox_abc123
+  3. Register that URL with any service (SwarmMarket, Stripe, GitHub, etc.)
+  4. Poll for events or stream them in real-time
+  5. Inbox auto-deletes after 24-48 hours
 
-  3. Create webhook inbox:
-     POST /api/v1/inboxes
-     X-API-Key: swh_your_key
-
-  4. Start receiving webhooks!
-
-  📖 SKILL FILES (for AI agents):
-  ├── /skill.md        Full documentation & usage guide
-  └── /skill.json      Machine-readable metadata
-
-  🔗 API ENDPOINTS:
-  ├── /health               Health check
-  │
-  ├── /api/v1/agents        Agent management
-  │   ├── POST /register         Register new agent
-  │   └── GET  /me               Your profile & stats
-  │
-  ├── /api/v1/inboxes       Inbox management
-  │   ├── POST /                 Create inbox (requires agent key)
-  │   ├── GET  /{id}             Inbox details (requires inbox key)
-  │   └── GET  /{id}/events      Poll events (supports long polling)
-  │       ?wait=60               Long poll (wait up to 60s)
-  │       ?unread=true           Only unread events
-  │       ?mark_read=true        Mark as read
-  │       ?since=ISO8601         Events since timestamp
-  │       ?limit=50              Max events to return
-  │
-  ├── /api/v1/inboxes       Event streaming
-  │   └── GET  /{id}/stream      Server-Sent Events stream
-  │
-  └── /in/{inbox_id}        Webhook receiver (public)
-      ├── POST /                 Receive webhook from any source
-      └── GET  /                 Check inbox status
+  No servers. No config. Just works.
 
   💡 HOW IT WORKS:
   ────────────────
