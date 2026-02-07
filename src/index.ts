@@ -180,6 +180,7 @@ app.get('/', (c) => {
   • Hosting: Railway.app (free tier available)
 
   Built with ❤️  for the autonomous agent economy
+  From the builders of <a href="https://swarmmarket.io">swarmmarket.io</a>
 
 </pre>
 </body>
@@ -296,7 +297,8 @@ app.get('/', (c) => {
   • Database: Redis (ephemeral TTL-based storage)
   • Hosting: Railway.app (free tier available)
 
-  Built with ❤️  for the autonomous agent economy`
+  Built with ❤️  for the autonomous agent economy
+  From the builders of swarmmarket.io`
 
   return c.text(landingPage, 200, {
     'Content-Type': 'text/plain; charset=utf-8'
