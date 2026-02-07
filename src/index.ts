@@ -7,15 +7,24 @@ import webhookRoutes from './routes/webhooks'
 import eventRoutes from './routes/events'
 import { readFileSync } from 'fs'
 import { join } from 'path'
+import { securityLogger, rateLimit } from './middleware/security'
 
 const app = new Hono()
 
 // Middleware
 app.use('*', logger())
+app.use('*', securityLogger) // Security logging
 app.use('*', cors({
   origin: '*',
   allowMethods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'X-API-Key'],
+}))
+
+// Rate limiting - global
+app.use('*', rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 100, // 100 requests per minute per IP
+  message: 'Too many requests, please slow down'
 }))
 
 // Health check
@@ -57,17 +66,17 @@ app.get('/', (c) => {
   4. Start receiving webhooks!
 
   📖 SKILL FILES (for AI agents):
-  ├── /skill.md        Full documentation & usage guide
-  └── /skill.json      Machine-readable metadata
+  ├── <a href="/skill.md">/skill.md</a>        Full documentation & usage guide
+  └── <a href="/skill.json">/skill.json</a>      Machine-readable metadata
 
   🔗 API ENDPOINTS:
-  ├── /health               Health check
+  ├── <a href="/health">/health</a>               Health check
   │
   ├── /api/v1/agents        Agent management
   │   ├── POST /register         Register new agent
   │   └── GET  /me               Your profile & stats
   │
-  ├── /api/v1/inboxes       Inbox management
+  ├── <a href="/api/v1/inboxes">/api/v1/inboxes</a>       Inbox management
   │   ├── POST /                 Create inbox (requires agent key)
   │   ├── GET  /{id}             Inbox details (requires inbox key)
   │   └── GET  /{id}/events      Poll events (supports long polling)
@@ -98,6 +107,15 @@ app.get('/', (c) => {
   ✓ Bots monitoring payment events (Stripe, PayPal)
   ✓ Autonomous systems tracking GitHub webhooks
   ✓ Agents listening to blockchain events
+
+  🔒 SECURITY:
+  ────────────────
+  ✓ API keys required for agent & inbox management
+  ✓ Webhook URLs are unguessable (cryptographic random IDs)
+  ✓ Rate limiting on all endpoints
+  ✓ Request validation & sanitization
+  ✓ No PII stored (just webhook payloads)
+  ✓ Auto-expiring inboxes (ephemeral by design)
   ✓ Any scenario where you need webhooks without a server
 
   💰 PRICING:

@@ -1,7 +1,11 @@
 import { Hono } from 'hono'
 import { InboxService } from '../services/inbox'
+import { logSecurity } from '../middleware/security'
 
 const app = new Hono()
+
+// Max payload size: 1MB
+const MAX_PAYLOAD_SIZE = 1024 * 1024
 
 /**
  * Receive webhook
@@ -29,12 +33,37 @@ app.post('/:inbox_id', async (c) => {
   try {
     if (contentType.includes('application/json')) {
       body = await c.req.json()
+
+      // Validate payload size
+      const bodyStr = JSON.stringify(body)
+      if (bodyStr.length > MAX_PAYLOAD_SIZE) {
+        logSecurity('Oversized webhook payload rejected', {
+          inbox_id: inboxId,
+          ip: sourceIp,
+          size: bodyStr.length
+        })
+        return c.json({ error: 'Payload too large (max 1MB)' }, 413)
+      }
     } else if (contentType.includes('application/x-www-form-urlencoded')) {
       body = await c.req.parseBody()
     } else {
-      body = await c.req.text()
+      const textBody = await c.req.text()
+      if (textBody.length > MAX_PAYLOAD_SIZE) {
+        logSecurity('Oversized webhook payload rejected', {
+          inbox_id: inboxId,
+          ip: sourceIp,
+          size: textBody.length
+        })
+        return c.json({ error: 'Payload too large (max 1MB)' }, 413)
+      }
+      body = textBody
     }
   } catch (error) {
+    logSecurity('Invalid webhook payload', {
+      inbox_id: inboxId,
+      ip: sourceIp,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    })
     return c.json({ error: 'Invalid request body' }, 400)
   }
 
@@ -42,13 +71,28 @@ app.post('/:inbox_id', async (c) => {
   try {
     const event = await InboxService.storeEvent(inboxId, sourceIp, headers, body)
 
+    // Log successful webhook receipt
+    console.log(JSON.stringify({
+      timestamp: new Date().toISOString(),
+      level: 'info',
+      action: 'webhook_received',
+      inbox_id: inboxId,
+      event_id: event.id,
+      ip: sourceIp,
+      content_type: contentType
+    }))
+
     return c.json({
       success: true,
       event_id: event.id,
       received_at: event.received_at
     }, 200)
   } catch (error) {
-    console.error('Error storing webhook event:', error)
+    logSecurity('Error storing webhook event', {
+      inbox_id: inboxId,
+      ip: sourceIp,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    })
 
     if (error instanceof Error && error.message.includes('not found')) {
       return c.json({ error: 'Inbox not found or expired' }, 404)

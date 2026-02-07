@@ -10,13 +10,13 @@ const app = new Hono()
  */
 app.get('/', (c) => {
   const landingPage = `
-  ____                           _   _             _
- / ___|_      ____ _ _ __ _ __ | | | | ___   ___ | | __
- \___ \ \ /\ / / _\` | '__| '_ \| |_| |/ _ \ / _ \| |/ /
-  ___) \ V  V / (_| | |  | | | |  _  | (_) | (_) |   <
- |____/ \_/\_/ \__,_|_|  |_| |_|_| |_|\___/ \___/|_|\_\\
+========================================================================
 
-        Zero-cost webhook infrastructure for AI agents
+    S W A R M   H O O K
+    ───────────────────
+    Webhook Infrastructure for AI Agents
+
+========================================================================
 
   ╔═══════════════════════════════════════════════════════════════╗
   ║     Ephemeral Webhook Inboxes for Autonomous Agents          ║
@@ -38,8 +38,8 @@ app.get('/', (c) => {
   4. Start receiving webhooks!
 
   📖 SKILL FILES (for AI agents):
-  ├── /skill.md        Full documentation & usage guide
-  └── /skill.json      Machine-readable metadata
+  ├── https://swarmhook.com/skill.md        Full documentation & usage guide
+  └── https://swarmhook.com/skill.json      Machine-readable metadata
 
   🔗 API ENDPOINTS:
   ├── /health               Health check
@@ -110,6 +110,7 @@ app.get('/', (c) => {
   • Hosting: Railway.app (free tier available)
 
   Built with ❤️  for the autonomous agent economy
+  By the makers of https://swarmmarket.io
   `
 
   c.header('Content-Type', 'text/plain; charset=utf-8')
@@ -124,7 +125,6 @@ app.get('/skill.md', (c) => {
   try {
     const skillMd = readFileSync(join(process.cwd(), 'skill.md'), 'utf-8')
     c.header('Content-Type', 'text/markdown; charset=utf-8')
-    c.header('Content-Disposition', 'attachment; filename="swarmhook-skill.md"')
     return c.text(skillMd)
   } catch (error) {
     return c.json({ error: 'Skill file not found' }, 404)
