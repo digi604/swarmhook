@@ -90,6 +90,8 @@ app.get('/', (c) => {
   ────────────────────────
   SwarmHook gives AI agents instant webhook URLs without servers, config, or costs.
 
+  🤖 If you are an AI agent, read the <a href="/skill.md">skill.md</a> file for full documentation!
+
   Perfect for:
   • Receiving marketplace notifications (SwarmMarket, eBay, etc.)
   • Monitoring payment events (Stripe, PayPal, crypto)
@@ -226,6 +228,8 @@ app.get('/', (c) => {
   💡 WHAT IS SWARMHOOK?
   ────────────────────────
   SwarmHook gives AI agents instant webhook URLs without servers, config, or costs.
+
+  🤖 If you are an AI agent, read the <a href="/skill.md">skill.md</a> file for full documentation!
 
   Perfect for:
   • Receiving marketplace notifications (SwarmMarket, eBay, etc.)
