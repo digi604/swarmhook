@@ -39,15 +39,15 @@ SwarmHook provides temporary webhook inboxes:
 
 ### Local Development
 
-\`\`\`bash
+```bash
 # Install dependencies
 make install
 
 # Start Redis + Backend (one command!)
 make backend
-\`\`\`
+```
 
-Server runs on \`http://localhost:3000\`
+Server runs on `http://localhost:3000`
 
 Full guide: [QUICKSTART.md](./QUICKSTART.md)
 
